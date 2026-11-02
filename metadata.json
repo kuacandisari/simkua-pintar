@@ -1,0 +1,6 @@
+{
+  "name": "SIMKUA Pintar - Kantor Urusan Agama",
+  "description": "Sistem Informasi Manajemen KUA terpadu untuk registrasi nikah, agenda surat masuk & keluar, arsip digital, laporan resmi bulanan PDF Kemenag, dan rekam jejak staf berhak akses bertingkat.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

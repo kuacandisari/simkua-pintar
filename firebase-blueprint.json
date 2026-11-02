@@ -1,0 +1,148 @@
+{
+  "entities": {
+    "NikahRegistration": {
+      "title": "NikahRegistration",
+      "description": "Catatan registrasi pendaftaran nikah calon pengantin di KUA",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID unik pendaftaran nikah" },
+        "noPendaftaran": { "type": "string", "description": "Nomor agenda pendaftaran resmi KUA" },
+        "namaSuami": { "type": "string", "description": "Nama lengkap calon suami" },
+        "nikSuami": { "type": "string", "description": "NIK calon suami 16 digit" },
+        "namaIstri": { "type": "string", "description": "Nama lengkap calon istri" },
+        "nikIstri": { "type": "string", "description": "NIK calon istri 16 digit" },
+        "namaWali": { "type": "string", "description": "Nama lengkap wali nikah" },
+        "hubunganWali": { "type": "string", "description": "Hubungan nasab/wali hakim" },
+        "tanggalAkad": { "type": "string", "description": "Tanggal pelaksanaan akad (YYYY-MM-DD)" },
+        "jamAkad": { "type": "string", "description": "Jam pelaksanaan akad (HH:mm)" },
+        "lokasiAkad": { "type": "string", "enum": ["Di KUA", "Luar KUA (Bedol)"], "description": "Lokasi pelaksanaan akad" },
+        "alamatAkad": { "type": "string", "description": "Alamat spesifik lokasi akad" },
+        "penghuluId": { "type": "string", "description": "ID penghulu yang ditugaskan" },
+        "penghuluNama": { "type": "string", "description": "Nama penghulu yang ditugaskan" },
+        "status": {
+          "type": "string",
+          "enum": ["Pendaftaran", "Pemeriksaan", "Pengumuman", "Siap Akad", "Selesai", "Ditolak"],
+          "description": "Status alur verifikasi berkas nikah"
+        },
+        "noAktaNikah": { "type": "string", "description": "Nomor akta nikah resmi setelah selesai" },
+        "noBukuNikah": { "type": "string", "description": "Nomor seri perforasi buku nikah" },
+        "biayaNikah": { "type": "number", "description": "Tarif PNBP nikah (Rp 0 di KUA, Rp 600.000 bedol)" },
+        "pnbpStatus": { "type": "string", "enum": ["Gratis (KUA)", "Menunggu Pembayaran", "Lunas"], "description": "Status setor PNBP" },
+        "catatan": { "type": "string", "description": "Catatan petugas KUA" },
+        "createdAt": { "type": "string", "description": "Waktu pendaftaran dibuat" },
+        "updatedAt": { "type": "string", "description": "Waktu pembaruan terakhir" }
+      },
+      "required": ["id", "noPendaftaran", "namaSuami", "nikSuami", "namaIstri", "nikIstri", "tanggalAkad", "jamAkad", "lokasiAkad", "status"]
+    },
+    "SuratRecord": {
+      "title": "SuratRecord",
+      "description": "Register surat masuk dan keluar kedinasan KUA",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID unik surat" },
+        "jenis": { "type": "string", "enum": ["Surat Masuk", "Surat Keluar"], "description": "Jenis arsip surat" },
+        "noAgenda": { "type": "string", "description": "Nomor urut agenda surat dinas" },
+        "noSurat": { "type": "string", "description": "Nomor surat fisik/resmi dari pengirim" },
+        "tglSurat": { "type": "string", "description": "Tanggal yang tertera pada surat" },
+        "tglDiterima": { "type": "string", "description": "Tanggal surat diterima atau dikirimkan" },
+        "pengirim": { "type": "string", "description": "Instansi/nama pengirim surat" },
+        "tujuan": { "type": "string", "description": "Tujuan pengiriman surat" },
+        "perihal": { "type": "string", "description": "Ringkasan subjek / perihal surat" },
+        "klasifikasi": { "type": "string", "description": "Klasifikasi surat dinas Kemenag" },
+        "disposisiCatatan": { "type": "string", "description": "Instruksi/catatan disposisi Kepala KUA" },
+        "disposisiKepada": { "type": "string", "description": "Staf yang ditugaskan menindaklanjuti disposisi" },
+        "disposisiBatasWaktu": { "type": "string", "description": "Tenggat waktu tindak lanjut" },
+        "status": {
+          "type": "string",
+          "enum": ["Baru", "Didisposisi", "Sedang Diproses", "Selesai"],
+          "description": "Status penyelesaian surat"
+        },
+        "lampiranNama": { "type": "string", "description": "Nama file berkas scan lampiran" },
+        "createdAt": { "type": "string", "description": "Waktu registrasi surat" }
+      },
+      "required": ["id", "jenis", "noAgenda", "noSurat", "tglSurat", "pengirim", "perihal", "status"]
+    },
+    "ArsipDokumen": {
+      "title": "ArsipDokumen",
+      "description": "Pusat penyimpanan arsip dokumen digital KUA",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID unik berkas arsip" },
+        "judul": { "type": "string", "description": "Nama / judul arsip dokumen" },
+        "kategori": {
+          "type": "string",
+          "enum": ["Berkas Nikah", "Surat Keputusan", "Dokumen Rujuk", "Wakaf & Kemasjidan", "Arsip Kepegawaian", "Laporan Bulanan", "Lainnya"],
+          "description": "Kategori penataan arsip"
+        },
+        "noReferensi": { "type": "string", "description": "Nomor referensi atau nomor berkas terkait" },
+        "tahun": { "type": "string", "description": "Tahun arsip dokumen" },
+        "ukuran": { "type": "string", "description": "Ukuran file berkas" },
+        "tipeFile": { "type": "string", "description": "Format file (PDF, JPG, PNG)" },
+        "keterangan": { "type": "string", "description": "Keterangan isi dokumen" },
+        "isTerenkripsi": { "type": "boolean", "description": "Penanda enkripsi checksum dokumen digital" },
+        "checksum": { "type": "string", "description": "Hash integritas berkas" },
+        "uploadedBy": { "type": "string", "description": "Nama staf pengunggah" },
+        "uploadedAt": { "type": "string", "description": "Waktu pengunggahan" }
+      },
+      "required": ["id", "judul", "kategori", "tahun", "uploadedBy", "uploadedAt"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Rekam jejak aktivitas staf secara transparan dan aman",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID unik rekam jejak" },
+        "timestamp": { "type": "string", "description": "Waktu aktivitas terjadi" },
+        "userName": { "type": "string", "description": "Nama staf pelaksana" },
+        "userRole": { "type": "string", "description": "Hak akses / jabatan staf" },
+        "aksi": { "type": "string", "description": "Tindakan yang dilakukan (TAMBAH, EDIT, DISPOSISI, CETAK, HAPUS)" },
+        "modul": { "type": "string", "description": "Modul sistem (Nikah, Surat, Arsip, Laporan, Pengguna)" },
+        "detail": { "type": "string", "description": "Deskripsi rinci perubahan data" }
+      },
+      "required": ["id", "timestamp", "userName", "userRole", "aksi", "modul", "detail"]
+    },
+    "StaffUser": {
+      "title": "StaffUser",
+      "description": "Data pegawai / staf KUA dengan hak akses bertingkat",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID pengguna staf" },
+        "nama": { "type": "string", "description": "Nama lengkap beserta gelar" },
+        "nip": { "type": "string", "description": "Nomor Induk Pegawai Kemenag" },
+        "email": { "type": "string", "description": "Email resmi pegawai" },
+        "role": {
+          "type": "string",
+          "enum": ["Kepala KUA", "Penghulu", "Staf Tata Usaha", "Verifikator"],
+          "description": "Peran hak akses sistem"
+        },
+        "jabatan": { "type": "string", "description": "Jabatan fungsional atau struktural" },
+        "noHp": { "type": "string", "description": "Nomor kontak WhatsApp dinas" },
+        "avatarUrl": { "type": "string", "description": "URL foto profil staf" },
+        "statusAktif": { "type": "boolean", "description": "Status keaktifan staf" }
+      },
+      "required": ["id", "nama", "nip", "email", "role", "jabatan", "statusAktif"]
+    }
+  },
+  "firestore": {
+    "/nikah_registrations/{registrationId}": {
+      "schema": "NikahRegistration",
+      "description": "Koleksi data pendaftaran pernikahan calon pengantin"
+    },
+    "/surat_records/{suratId}": {
+      "schema": "SuratRecord",
+      "description": "Koleksi buku agenda surat masuk dan keluar KUA"
+    },
+    "/arsip_dokumen/{arsipId}": {
+      "schema": "ArsipDokumen",
+      "description": "Koleksi repositori arsip digital dokumen KUA"
+    },
+    "/audit_logs/{logId}": {
+      "schema": "AuditLog",
+      "description": "Koleksi log rekam jejak transparansi aktivitas staf"
+    },
+    "/staff_users/{staffId}": {
+      "schema": "StaffUser",
+      "description": "Koleksi profil pegawai KUA dan perannya"
+    }
+  }
+}
