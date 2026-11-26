@@ -1,0 +1,81 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny all unknown collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isBootstrappedAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'khoirulburhan96@gmail.com' ||
+        exists(/databases/$(database)/documents/staff_users/$(request.auth.uid))
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Nikah Registrations Collection
+    match /nikah_registrations/{registrationId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(registrationId)
+        && incoming().namaSuami is string && incoming().namaSuami.size() <= 200
+        && incoming().namaIstri is string && incoming().namaIstri.size() <= 200
+        && incoming().status in ['Pendaftaran', 'Pemeriksaan', 'Pengumuman', 'Siap Akad', 'Selesai', 'Ditolak'];
+      allow update: if isSignedIn() && isValidId(registrationId)
+        && incoming().namaSuami is string && incoming().namaSuami.size() <= 200
+        && incoming().namaIstri is string && incoming().namaIstri.size() <= 200;
+      allow delete: if isSignedIn() && isBootstrappedAdmin();
+    }
+
+    // Surat Records Collection
+    match /surat_records/{suratId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(suratId)
+        && incoming().jenis in ['Surat Masuk', 'Surat Keluar']
+        && incoming().perihal is string && incoming().perihal.size() <= 300;
+      allow update: if isSignedIn() && isValidId(suratId);
+      allow delete: if isSignedIn() && isBootstrappedAdmin();
+    }
+
+    // Arsip Dokumen Digital Collection
+    match /arsip_dokumen/{arsipId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(arsipId)
+        && incoming().judul is string && incoming().judul.size() <= 200;
+      allow update: if isSignedIn() && isValidId(arsipId);
+      allow delete: if isSignedIn() && isBootstrappedAdmin();
+    }
+
+    // Audit Logs Collection (Append-only by staff, read by authenticated users)
+    match /audit_logs/{logId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(logId)
+        && incoming().aksi is string
+        && incoming().modul is string;
+      allow update, delete: if false; // Immutable audit trail
+    }
+
+    // Staff Users Collection
+    match /staff_users/{staffId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn() && (request.auth.uid == staffId || isBootstrappedAdmin());
+      allow delete: if isSignedIn() && isBootstrappedAdmin();
+    }
+  }
+}
